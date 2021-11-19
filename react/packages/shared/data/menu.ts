@@ -24,32 +24,18 @@ const menus = [
         label: "Dashboard",
         url: "/",
         Icon: PieChart,
-        submenu: [
-            {
-                id: 11,
-                label: "Sales Monitoring",
-                url: "/",
-                Icon: BarChart2,
-            },
-            {
-                id: 12,
-                label: "Website Analytics",
-                url: "/dashboard-two",
-                Icon: BarChart2,
-            },
-            {
-                id: 13,
-                label: "Cryptocurrency",
-                url: "/dashboard-three",
-                Icon: BarChart2,
-            },
-            {
-                id: 14,
-                label: "Helpdesk Management",
-                url: "/dashboard-four",
-                Icon: BarChart2,
-            },
-        ],
+    },
+    {
+        id: 1,
+        label: "User",
+        url: "/user",
+        Icon: PieChart,
+    },
+    {
+        id: 1,
+        label: "Role",
+        url: "/role",
+        Icon: PieChart,
     },
     {
         id: 2,

@@ -27,6 +27,7 @@ const ProfileDropdown: React.FC = () => {
         (state) => state.login
     );
     const { handleSubmit } = useForm();
+    /* logout function */
     const logoutUser = () => {
         dispatch(logoutState());
         history.push("/signin");

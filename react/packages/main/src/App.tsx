@@ -4,6 +4,7 @@ import Preloader from "./components/preloader";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const DashboardOne = lazy(() => import("./pages/dashboard-one"));
+const Users = lazy(() => import("./pages/user/index"));
 const DashboardTwo = lazy(() => import("./pages/dashboard-two"));
 const DashboardThree = lazy(() => import("./pages/dashboard-three"));
 const DashboardFour = lazy(() => import("./pages/dashboard-four"));
@@ -40,6 +41,7 @@ const App: React.FC = () => {
                             path="/"
                             component={DashboardOne}
                         />
+                        <ProtectedRoute exact path="/user" component={Users} />
                         <ProtectedRoute
                             exact
                             path="/dashboard-two"

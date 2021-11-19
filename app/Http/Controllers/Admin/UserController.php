@@ -70,6 +70,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'created_by'=>Helper::get_parent_id(),
+            'api_token' => Hash::make($request->username),
         ]);
         // assign role
         $user->assignRole($request->role);
