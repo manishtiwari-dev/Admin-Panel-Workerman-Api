@@ -38,8 +38,19 @@ const loginSlice = createSlice({
             localStorage.setItem("permission", JSON.stringify(permission));
             localStorage.setItem("username", name);
         },
+        logoutState(state) {
+            state.apiToken = "";
+            state.name = "";
+            state.role = "";
+            state.isAuthenticated = false;
+            state.permission = "";
+            localStorage.setItem("access_token", "");
+            localStorage.setItem("role", "");
+            localStorage.setItem("permission", "");
+            localStorage.setItem("username", "");
+        },
     },
 });
 
-export const { updateLoginState } = loginSlice.actions;
+export const { updateLoginState, logoutState } = loginSlice.actions;
 export default loginSlice.reducer;

@@ -1,19 +1,16 @@
 import React from "react";
-import {
-    Edit3,
-    User,
-    HelpCircle,
-    LifeBuoy,
-    Settings,
-    LogOut,
-} from "react-feather";
+import { User, HelpCircle, LifeBuoy, Settings, LogOut } from "react-feather";
 import {
     DropdownToggle,
     Dropdown,
     Avatar,
     AvatarInitial,
+    Button,
 } from "@doar/components";
-import { useAppSelector } from "../../../redux/hooks";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { logoutState } from "../../../redux/slices/login";
 import {
     StyledDropMenu,
     StyledAuthorName,
@@ -24,8 +21,16 @@ import {
 } from "./style";
 
 const ProfileDropdown: React.FC = () => {
-    const { name, role, apiToken } = useAppSelector((state) => state.login);
-
+    const dispatch = useAppDispatch();
+    const history = useHistory();
+    const { name, role, isAuthenticated } = useAppSelector(
+        (state) => state.login
+    );
+    const { handleSubmit } = useForm();
+    const logoutUser = () => {
+        dispatch(logoutState());
+        history.push("/signin");
+    };
     return (
         <Dropdown direction="down" className="dropdown-profile">
             <DropdownToggle variant="texted">
@@ -46,7 +51,7 @@ const ProfileDropdown: React.FC = () => {
                     {role === null ? "Guest" : role}
                 </StyledAuthorRole>
 
-                {apiToken === null ? (
+                {isAuthenticated === false ? (
                     <StyledDropItem path="/signin" mt="10px">
                         <LogOut size="24" />
                         Sign In
@@ -57,10 +62,15 @@ const ProfileDropdown: React.FC = () => {
                             <User size="24" />
                             View Profile
                         </StyledDropItem>
-                        <StyledDropItem path="/signin" mt="10px">
-                            <LogOut size="24" />
+                        <Button
+                            color="primary"
+                            variant="texted"
+                            mt="10px"
+                            onClick={handleSubmit(logoutUser)}
+                        >
+                            <LogOut size="15" />
                             Sign Out
-                        </StyledDropItem>
+                        </Button>
                     </>
                 )}
                 <StyledDivider />

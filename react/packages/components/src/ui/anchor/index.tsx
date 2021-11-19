@@ -30,21 +30,23 @@ export const Anchor: React.FC<IProps> = ({
 }) => {
     const internal = /^\/(?!\/)/.test(path);
     if (!internal) {
-        const isHash = path.startsWith("#");
-        if (isHash) {
-            return (
-                <StyledAnchor
-                    aria-label={label}
-                    rel={rel}
-                    className={className}
-                    href={path}
-                    onClick={onClick}
-                    $variant={variant}
-                    {...rest}
-                >
-                    {children}
-                </StyledAnchor>
-            );
+        if(path != undefined){
+            const isHash = path.startsWith("#");
+            if (isHash) {
+                return (
+                    <StyledAnchor
+                        aria-label={label}
+                        rel={rel}
+                        className={className}
+                        href={path}
+                        onClick={onClick}
+                        $variant={variant}
+                        {...rest}
+                    >
+                        {children}
+                    </StyledAnchor>
+                );
+            }
         }
         return (
             <StyledAnchor

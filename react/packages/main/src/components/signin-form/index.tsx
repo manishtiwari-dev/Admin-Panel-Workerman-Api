@@ -19,7 +19,7 @@ import {
 
 const SigninForm: FC = () => {
     const dispatch = useAppDispatch();
-    const { apiToken } = useAppSelector((state) => state.login);
+    const { isAuthenticated } = useAppSelector((state) => state.login);
     const history = useHistory();
     const {
         register,
@@ -28,6 +28,10 @@ const SigninForm: FC = () => {
     } = useForm();
 
     const [resError, setresError] = useState("");
+    /* check already login than mode to dashboard */
+    if (isAuthenticated) {
+        history.push("/");
+    }
     const onSubmit = (formData: LoginInfo) => {
         setresError("");
         axios
