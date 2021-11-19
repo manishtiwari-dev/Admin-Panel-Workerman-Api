@@ -1,5 +1,5 @@
 import { FC } from "react";
-import loginImage from "@doar/shared/images/img15.7466a766.png";
+import loginImage from "@doar/shared/images/img15.png";
 import SigninForm from "../../components/signin-form";
 import {
     StyledMedia,
@@ -16,7 +16,16 @@ const AuthContainer: FC = () => {
                 <StyledImage>
                     <img src={loginImage} alt="Login" />
                 </StyledImage>
-                <StyledImgText>Login</StyledImgText>
+                <StyledImgText>
+                    Workspace design vector is created by{" "}
+                    <a
+                        href="https://www.freepik.com/pikisuperstar"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        pikisuperstar (freepik.com)
+                    </a>
+                </StyledImgText>
             </StyledMediaBody>
             <StyledSignin>
                 <SigninForm />

@@ -1,7 +1,13 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import axios, { AxiosResponse } from "axios";
+import { useHistory } from "react-router-dom";
 import { FormGroup, Label, Input, Anchor, Button } from "@doar/components";
 import { useForm } from "react-hook-form";
 import { hasKey } from "@doar/shared/methods";
+import { LoginInfo } from "../../models/login.interface";
+import { loginUrl } from "../../config";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateLoginState } from "../../redux/slices/login";
 import {
     StyledWrap,
     StyledTitle,
@@ -11,25 +17,42 @@ import {
     StyledBottomText,
 } from "./style";
 
-interface IFormValues {
-    email: string;
-    password: string;
-}
-
 const SigninForm: FC = () => {
+    const dispatch = useAppDispatch();
+    const { apiToken } = useAppSelector((state) => state.login);
+    const history = useHistory();
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data: IFormValues) => {
-        alert(JSON.stringify(data, null));
+    const [resError, setresError] = useState("");
+    const onSubmit = (formData: LoginInfo) => {
+        setresError("");
+        axios
+            .post(loginUrl, formData)
+            .then((response: AxiosResponse) => {
+                const { status, message, data } = response.data;
+                if (status) {
+                    console.log(data);
+                    dispatch(updateLoginState(data));
+                    setresError("You logged in !");
+                    history.push("/");
+                } else {
+                    console.log(message);
+                    setresError(message);
+                }
+            })
+            .catch((error) => {
+                console.error("There was an error!", error);
+            });
     };
     return (
         <StyledWrap>
             <StyledTitle>Sign In</StyledTitle>
             <StyledDesc>Welcome back! Please signin to continue.</StyledDesc>
+            <StyledDesc>{resError}</StyledDesc>
             <form action="#" onSubmit={handleSubmit(onSubmit)} noValidate>
                 <FormGroup mb="20px">
                     <Label display="block" mb="5px" htmlFor="email">
@@ -74,8 +97,8 @@ const SigninForm: FC = () => {
                                 message: "Minimum length is 6",
                             },
                             maxLength: {
-                                value: 10,
-                                message: "Minimum length is 10",
+                                value: 50,
+                                message: "Minimum length is 50",
                             },
                         })}
                     />

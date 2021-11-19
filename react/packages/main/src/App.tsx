@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Preloader from "./components/preloader";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const DashboardOne = lazy(() => import("./pages/dashboard-one"));
 const DashboardTwo = lazy(() => import("./pages/dashboard-two"));
@@ -34,6 +35,11 @@ const App: React.FC = () => {
             <Router>
                 <Suspense fallback={<Preloader />}>
                     <Switch>
+                        <ProtectedRoute
+                            exact
+                            path="/"
+                            component={DashboardOne}
+                        />
                         <Route exact path="/" component={DashboardOne} />
                         <Route
                             exact

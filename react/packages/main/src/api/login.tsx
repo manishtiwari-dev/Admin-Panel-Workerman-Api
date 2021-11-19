@@ -2,15 +2,16 @@ import axios, { AxiosResponse } from "axios";
 import { LoginInfo } from "../models/login.interface";
 
 const instance = axios.create({
-    baseURL: "http://127.0.0.1:8000/",
+    baseURL: "https://jsonplaceholder.typicode.com/",
     timeout: 15000,
 });
-const responseBody = (response: AxiosResponse) => response.data;
+const responseBody = (response: AxiosResponse<any>) => response.data;
 const requests = {
-    post: (url: string, body: {}) =>
+    get: (url: string) => instance.get(url).then(responseBody),
+    post: (url: string, body: any) =>
         instance.post(url, body).then(responseBody),
 };
 export const LoginApi = {
-    doLogin: (info: LoginInfo): Promise<LoginInfo> =>
-        requests.post("api/login", info),
+    getAPost: (id: number) => requests.get(`posts/${id}`),
+    doLogin: (info: LoginInfo) => requests.post("api/login", info),
 };

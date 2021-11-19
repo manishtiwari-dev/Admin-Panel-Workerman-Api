@@ -24,6 +24,7 @@ const loginSlice = createSlice({
     reducers: {
         updateLoginState(state, action: PayloadAction<any>) {
             console.log(action);
+            console.log(action);
             const { role, permission } = action.payload;
             const { name } = action.payload.user;
             const apiToken = action.payload.user.api_token;

@@ -9,5 +9,10 @@
         "baseUrl": ".",
         "downlevelIteration": true
     },
-    "include": ["src", "src/*", "src/**/*", "config-overrides.js"]
+    "include": [
+        "src",
+        "src/*",
+        "src/**/*",
+        "config-overrides.js"
+    ]
 }
