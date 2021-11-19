@@ -25,7 +25,12 @@ class UserController extends Controller
                 }
                 /* passowrd match */
                 if(Hash::check($request->password, $res->password)){
-                    return ApiHelper::JSON_RESPONSE(true,new UserResource($res),'Login success');
+                    $response = [
+                        'role'=>ApiHelper::get_role_from_token($res->api_token),
+                        'permission'=>ApiHelper::get_permission_list($res->api_token),
+                        'user'=>new UserResource($res)
+                    ];
+                    return ApiHelper::JSON_RESPONSE(true,$response,'Login success');
                 }else{
                     return ApiHelper::JSON_RESPONSE(false,[],'Wrong password !');
                 }
@@ -115,6 +120,10 @@ class UserController extends Controller
         else
             return ApiHelper::JSON_RESPONSE(false,[],'Unable to updated !');
             
+    }
+
+    public function user_list(){
+        return ApiHelper::JSON_RESPONSE(true,User::all(),'');
     }
 
     
