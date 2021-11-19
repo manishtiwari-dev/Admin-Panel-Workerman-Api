@@ -14,6 +14,7 @@ import storage from "redux-persist/lib/storage";
 import eventReducer from "./slices/event";
 import uiReducer from "./slices/ui";
 import chatUISlice from "./slices/chat-ui";
+import loginSlice from "./slices/login";
 
 const persistConfig = {
     key: "doar",
@@ -25,6 +26,7 @@ export const rootReducer = combineReducers({
     events: eventReducer,
     ui: uiReducer,
     chatUI: chatUISlice,
+    login: loginSlice,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
