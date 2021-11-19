@@ -44,7 +44,7 @@ class ApiHelper
             'status'=>$status,
             'data'=>$data,
             'message'=>$msg
-        ]);
+        ],($status)?200:201);
     }
 
     /* 
@@ -58,7 +58,7 @@ class ApiHelper
     /*
         function:get_permission_list
     */
-    public static function get_permission_list(){
+    public static function get_permission_list($token){
         $permission_array = [];
         $user = User::where('api_token',$token)->first();   
         foreach ($user->roles[0]->permissions as $key => $permission)

@@ -40,13 +40,12 @@ const App: React.FC = () => {
                             path="/"
                             component={DashboardOne}
                         />
-                        <Route exact path="/" component={DashboardOne} />
-                        <Route
+                        <ProtectedRoute
                             exact
                             path="/dashboard-two"
                             component={DashboardTwo}
                         />
-                        <Route
+                        <ProtectedRoute
                             exact
                             path="/dashboard-three"
                             component={DashboardThree}
