@@ -1,11 +1,11 @@
 .hide{
-    display: none;
+    display: none !important;
     width: 0px;
     transition: width 2s;
     transition-timing-function: linear;
 }
 .show{
-    display: block;
+    display: block !important;
     width: 100%;
     transition: width 2s;
     transition-timing-function: linear;

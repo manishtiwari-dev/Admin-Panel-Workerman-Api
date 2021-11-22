@@ -25,7 +25,7 @@ import Content from "../../layouts/content";
 import PageHeader from "../../components/page-header";
 import Sidebar from "../../containers/groups/sidebar";
 import SEO from "../../components/seo";
-import { userUrl, createUserUrl } from "../../config";
+import { userUrl, createUserUrl, editUserUrl } from "../../config";
 import { useAppSelector } from "../../redux/hooks";
 
 interface Info {
@@ -47,6 +47,7 @@ interface FormData {
 const Users: React.FC = () => {
     const { apiToken } = useAppSelector((state) => state.login);
     const [colSize, setColSize] = useState(12);
+    const [editUserData, setEditUser] = useState({});
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [userlist, SetUserList] = useState<Info[]>([]);
@@ -54,6 +55,7 @@ const Users: React.FC = () => {
         register,
         handleSubmit,
         formState: { errors },
+        setValue,
     } = useForm();
     const getUser = () => {
         const formData = {
@@ -105,9 +107,51 @@ const Users: React.FC = () => {
             });
     };
     const toggleCreateClass = () => {
+        const editElement = document.getElementsByClassName(
+            "editUserCreateForm"
+        );
+        editElement[0].classList.add("hide");
         const elements = document.getElementsByClassName("userCreateForm");
         if (elements[0].classList.toggle("show")) setColSize(8);
         else setColSize(12);
+    };
+
+    const editUser = (userID: number) => {
+        const addUserelements = document.getElementsByClassName(
+            "userCreateForm"
+        );
+        addUserelements[0].classList.add("hide");
+        const editData = {
+            api_token: apiToken,
+            updateId: userID,
+        };
+        axios
+            .post(editUserUrl, editData)
+            .then((response: AxiosResponse) => {
+                console.log(response);
+                const { status, data, message } = response.data;
+                if (status) {
+                    const elements = document.getElementsByClassName(
+                        "editUserCreateForm"
+                    );
+                    elements[0].classList.add("show");
+                    setColSize(8);
+                    const { name, email } = data;
+                    setValue("updatedId", data.id);
+                    setValue("name", name);
+                    setValue("email", email);
+                    setValue("role_name", data.role_name);
+                    setValue("status", data.status);
+                } else {
+                    alert(message);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const updateUser = (updateData: FormData) => {
+        console.log(updateData);
     };
 
     useEffect(() => {
@@ -158,11 +202,13 @@ const Users: React.FC = () => {
                                                 <td>{list.status}</td>
                                                 <td>{list.status}</td>
                                                 <td>
-                                                    <Link
-                                                        to={`/user/${list.id}`}
+                                                    <Button
+                                                        onClick={() =>
+                                                            editUser(list.id)
+                                                        }
                                                     >
                                                         Edit
-                                                    </Link>
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -310,6 +356,184 @@ const Users: React.FC = () => {
                                                 Select role
                                             </option>
                                             <option value="admin">Admin</option>
+                                        </select>
+                                    </FormGroup>
+                                    <Button
+                                        type="submit"
+                                        color="brand2"
+                                        fullwidth
+                                    >
+                                        Create user
+                                    </Button>
+                                </form>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col lg={4} className="editUserCreateForm hide">
+                        <Card width={["100%", "100%"]}>
+                            <CardHeader>
+                                <CardTitle as="h5">Edit User</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                {msgType.length > 2 &&
+                                    (msgType === "success" ? (
+                                        <Alert
+                                            color="success"
+                                            isDismissible
+                                            variant="contained"
+                                            solid={false}
+                                            hasLink={false}
+                                            hasIcon={false}
+                                        >
+                                            {errorMsg}
+                                        </Alert>
+                                    ) : (
+                                        <Alert
+                                            color="danger"
+                                            isDismissible
+                                            variant="contained"
+                                            solid={false}
+                                            hasLink={false}
+                                            hasIcon={false}
+                                        >
+                                            {errorMsg}
+                                        </Alert>
+                                    ))}
+                                <form
+                                    action="#"
+                                    onSubmit={handleSubmit(updateUser)}
+                                    noValidate
+                                >
+                                    <input
+                                        {...register("updatedId")}
+                                        type="hidden"
+                                    />
+                                    <FormGroup mb="20px">
+                                        <Label
+                                            display="block"
+                                            mb="5px"
+                                            htmlFor="name"
+                                        >
+                                            User Name
+                                        </Label>
+                                        <Input
+                                            id="name"
+                                            type="text"
+                                            placeholder="Enter your name"
+                                            feedbackText={errors?.name?.message}
+                                            state={
+                                                hasKey(errors, "name")
+                                                    ? "error"
+                                                    : "success"
+                                            }
+                                            showState={!!hasKey(errors, "name")}
+                                            {...register("name", {
+                                                required:
+                                                    "User Name is required",
+                                            })}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup mb="20px">
+                                        <Label
+                                            display="block"
+                                            mb="5px"
+                                            htmlFor="email"
+                                        >
+                                            Email address
+                                        </Label>
+                                        <Input
+                                            id="email"
+                                            type="email"
+                                            placeholder="Enter your email address"
+                                            state={
+                                                hasKey(errors, "email")
+                                                    ? "error"
+                                                    : "success"
+                                            }
+                                            showState={
+                                                !!hasKey(errors, "email")
+                                            }
+                                            {...register("email", {
+                                                required: "Email is required",
+                                                pattern: {
+                                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                                    message:
+                                                        "invalid email address",
+                                                },
+                                            })}
+                                            disabled
+                                        />
+                                    </FormGroup>
+                                    <FormGroup mb="20px">
+                                        <Label
+                                            display="block"
+                                            mb="5px"
+                                            htmlFor="password"
+                                        >
+                                            Password
+                                        </Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            placeholder="Enter your password"
+                                            state={
+                                                hasKey(errors, "password")
+                                                    ? "error"
+                                                    : "success"
+                                            }
+                                            showState={
+                                                !!hasKey(errors, "password")
+                                            }
+                                            {...register("password", {
+                                                required:
+                                                    "Password is required",
+                                                minLength: {
+                                                    value: 6,
+                                                    message:
+                                                        "Minimum length is 6",
+                                                },
+                                            })}
+                                        />
+                                    </FormGroup>
+                                    <FormGroup mb="20px">
+                                        <Label
+                                            display="block"
+                                            mb="5px"
+                                            htmlFor="role_name"
+                                        >
+                                            Role
+                                        </Label>
+                                        <select
+                                            id="role_name"
+                                            {...register("role_name", {
+                                                required:
+                                                    "Role name is required",
+                                            })}
+                                        >
+                                            <option value="">
+                                                Select role
+                                            </option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </FormGroup>
+                                    <FormGroup mb="20px">
+                                        <Label
+                                            display="block"
+                                            mb="5px"
+                                            htmlFor="status"
+                                        >
+                                            Status
+                                        </Label>
+                                        <select
+                                            id="status"
+                                            {...register("status")}
+                                        >
+                                            <option value="active">
+                                                Active
+                                            </option>
+                                            <option value="deactive">
+                                                Deactive
+                                            </option>
                                         </select>
                                     </FormGroup>
                                     <Button

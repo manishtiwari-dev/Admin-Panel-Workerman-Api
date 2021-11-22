@@ -20,7 +20,8 @@ Route::post('login', [UserController::class,'login']);
 
 Route::group(['middleware' => ['ApiTokenCheck']], function() {
 
-    Route::post('users', [UserController::class,'index']);
+    Route::post('users', [UserController::class,'index'])   ;
+    Route::post('user/edit', [UserController::class,'edit'])   ;
     Route::post('user/store', [UserController::class,'store']);
 
     Route::post('roles', [RolesController::class,'index']);

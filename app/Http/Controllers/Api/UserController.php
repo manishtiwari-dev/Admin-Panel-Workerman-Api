@@ -58,6 +58,7 @@ class UserController extends Controller
         return ApiHelper::JSON_RESPONSE(true,$user_list,'');
     }
 
+
     /* create user and assign role  */
     public function store(Request $request)
     {
@@ -97,6 +98,25 @@ class UserController extends Controller
         }
 
 
+    }
+    
+    public function edit(Request $request)
+    {
+        // Validate user page access
+        $api_token = $request->api_token;
+        if(!ApiHelper::is_page_access($api_token,'user.edit')){
+            return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
+        }
+        $userdetail = User::find($request->updateId);
+        if($userdetail != null){
+            if(isset($userdetail->roles[0]))
+                $userdetail->role_name = $userdetail->roles[0]->name;
+            else
+                $userdetail->role_name = '';
+
+            return ApiHelper::JSON_RESPONSE(true,$userdetail,'');
+        }else
+            return ApiHelper::JSON_RESPONSE(false,[],'Something went wrong !');
     }
 
     /**
