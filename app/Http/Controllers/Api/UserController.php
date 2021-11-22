@@ -86,6 +86,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'created_by'=>ApiHelper::get_user_id_from_token($request->api_token),
+            'api_token'=>Hash::make($request->name),
         ]);
         $user->assignRole($request->role_name);
 

@@ -1,0 +1,15 @@
+.hide{
+    display: none;
+    width: 0px;
+    transition: width 2s;
+    transition-timing-function: linear;
+}
+.show{
+    display: block;
+    width: 100%;
+    transition: width 2s;
+    transition-timing-function: linear;
+}
+.userCreateForm{
+    width: 0px;
+}

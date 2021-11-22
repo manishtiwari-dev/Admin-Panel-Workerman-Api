@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Preloader from "./components/preloader";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.css";
 
 const DashboardOne = lazy(() => import("./pages/dashboard-one"));
 const Users = lazy(() => import("./pages/user/index"));
