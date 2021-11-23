@@ -16,7 +16,7 @@ class RolesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         // Validate user page access
@@ -25,7 +25,7 @@ class RolesController extends Controller
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
         
-        $role_list = Role::where('created_by',ApiHelper::get_user_id_from_token($api_token));
+        $role_list = Role::with('permissions')->where('created_by',ApiHelper::get_user_id_from_token($api_token))->get();
         return ApiHelper::JSON_RESPONSE(true,$role_list,'');
 
     }
@@ -94,9 +94,16 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $api_token = $request->api_token;
+        if(!ApiHelper::is_page_access($api_token,'role.edit')){
+            return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
+        }
+
+        $role_list = Role::with('permissions')->find($request->updateId);
+        return ApiHelper::JSON_RESPONSE(true,$role_list,'');
+
     }
 
     /**

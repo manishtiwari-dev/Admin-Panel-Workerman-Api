@@ -77,7 +77,6 @@ class ApiHelper
                 return false;
             else
                 return true;
-
         }else{
             $permission_list = Self::get_permission_list();
             if(in_array($permission_name, $permission_list))

@@ -26,19 +26,19 @@ const menus = [
         Icon: PieChart,
     },
     {
-        id: 1,
+        id: 2,
         label: "User",
         url: "/user",
         Icon: PieChart,
     },
     {
-        id: 1,
+        id: 3,
         label: "Role",
         url: "/role",
         Icon: PieChart,
     },
     {
-        id: 2,
+        id: 4,
         label: "Apps",
         url: "/",
         Icon: Package,
@@ -76,7 +76,7 @@ const menus = [
         ],
     },
     {
-        id: 3,
+        id: 5,
         label: "Pages",
         url: "/",
         Icon: Layers,
@@ -204,14 +204,14 @@ const menus = [
         ],
     },
     {
-        id: 4,
+        id: 6,
         label: "Components",
         url:
             "https://doar-react-components.netlify.app/?path=/docs/introduction--page",
         Icon: Box,
     },
     {
-        id: 5,
+        id: 7,
         label: "Collections",
         url: "#!",
         Icon: Archive,

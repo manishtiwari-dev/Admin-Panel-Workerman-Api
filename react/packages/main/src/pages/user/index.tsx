@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
-import { Link } from "react-router-dom";
 import {
     Row,
     Col,
@@ -9,13 +8,10 @@ import {
     CardHeader,
     CardBody,
     CardTitle,
-    Select,
     Button,
     Label,
     FormGroup,
     Input,
-    Anchor,
-    Text,
     Alert,
 } from "@doar/components";
 import { useForm } from "react-hook-form";
@@ -23,10 +19,11 @@ import { hasKey } from "@doar/shared/methods";
 import Layout from "../../layouts";
 import Content from "../../layouts/content";
 import PageHeader from "../../components/page-header";
-import Sidebar from "../../containers/groups/sidebar";
 import SEO from "../../components/seo";
-import { userUrl, createUserUrl, editUserUrl } from "../../config";
+import { userUrl, editUserUrl, updateUserUrl } from "../../config";
 import { useAppSelector } from "../../redux/hooks";
+import CreateUserForm from "./createUserForm";
+import RoleOption from "../../components/user/RoleOption";
 
 interface Info {
     id: number;
@@ -47,7 +44,6 @@ interface FormData {
 const Users: React.FC = () => {
     const { apiToken } = useAppSelector((state) => state.login);
     const [colSize, setColSize] = useState(12);
-    const [editUserData, setEditUser] = useState({});
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [userlist, SetUserList] = useState<Info[]>([]);
@@ -66,44 +62,12 @@ const Users: React.FC = () => {
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { status, data, message } = response.data;
-                if (status) SetUserList(data);
+                if (status) SetUserList(data.data);
                 else alert(message);
             })
             .catch((error) => {
                 alert("Something went wrong !");
                 console.error("There was an error!", error);
-            });
-    };
-    const onSubmit = (formData: FormData) => {
-        const saveFormData = formData;
-        saveFormData.api_token = apiToken;
-        axios
-            .post(createUserUrl, saveFormData)
-            .then((response: AxiosResponse) => {
-                console.log(response);
-                const { status, data, message } = response.data;
-                if (status) {
-                    getUser();
-                    setMsgType("success");
-                    setErrorMsg(message);
-                } else {
-                    setMsgType("danger");
-                    if (typeof message === "object") {
-                        let errMsg = "";
-                        Object.keys(message).map((key) => {
-                            errMsg += message[key][0];
-                            return errMsg;
-                        });
-                        setErrorMsg(errMsg);
-                    } else {
-                        setErrorMsg(message);
-                    }
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                setMsgType("danger");
-                setErrorMsg("Something went wrong !");
             });
     };
     const toggleCreateClass = () => {
@@ -115,7 +79,6 @@ const Users: React.FC = () => {
         if (elements[0].classList.toggle("show")) setColSize(8);
         else setColSize(12);
     };
-
     const editUser = (userID: number) => {
         const addUserelements = document.getElementsByClassName(
             "userCreateForm"
@@ -152,6 +115,36 @@ const Users: React.FC = () => {
     };
     const updateUser = (updateData: FormData) => {
         console.log(updateData);
+        const sendUpdateData = updateData;
+        sendUpdateData.api_token = apiToken;
+        axios
+            .post(updateUserUrl, sendUpdateData)
+            .then((response: AxiosResponse) => {
+                console.log(response);
+                const { status, data, message } = response.data;
+                if (status) {
+                    getUser();
+                    setMsgType("success");
+                    setErrorMsg(message);
+                } else {
+                    setMsgType("danger");
+                    if (typeof message === "object") {
+                        let errMsg = "";
+                        Object.keys(message).map((key) => {
+                            errMsg += message[key][0];
+                            return errMsg;
+                        });
+                        setErrorMsg(errMsg);
+                    } else {
+                        setErrorMsg(message);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                setMsgType("danger");
+                setErrorMsg("Something went wrong !");
+            });
     };
 
     useEffect(() => {
@@ -217,157 +210,7 @@ const Users: React.FC = () => {
                         </Row>
                     </Col>
                     <Col lg={4} className="userCreateForm hide">
-                        <Card width={["100%", "100%"]}>
-                            <CardHeader>
-                                <CardTitle as="h5">Add User</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                {msgType.length > 2 &&
-                                    (msgType === "success" ? (
-                                        <Alert
-                                            color="success"
-                                            isDismissible
-                                            variant="contained"
-                                            solid={false}
-                                            hasLink={false}
-                                            hasIcon={false}
-                                        >
-                                            {errorMsg}
-                                        </Alert>
-                                    ) : (
-                                        <Alert
-                                            color="danger"
-                                            isDismissible
-                                            variant="contained"
-                                            solid={false}
-                                            hasLink={false}
-                                            hasIcon={false}
-                                        >
-                                            {errorMsg}
-                                        </Alert>
-                                    ))}
-                                <form
-                                    action="#"
-                                    onSubmit={handleSubmit(onSubmit)}
-                                    noValidate
-                                >
-                                    <FormGroup mb="20px">
-                                        <Label
-                                            display="block"
-                                            mb="5px"
-                                            htmlFor="name"
-                                        >
-                                            User Name
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            placeholder="Enter your name"
-                                            feedbackText={errors?.name?.message}
-                                            state={
-                                                hasKey(errors, "name")
-                                                    ? "error"
-                                                    : "success"
-                                            }
-                                            showState={!!hasKey(errors, "name")}
-                                            {...register("name", {
-                                                required:
-                                                    "User Name is required",
-                                            })}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup mb="20px">
-                                        <Label
-                                            display="block"
-                                            mb="5px"
-                                            htmlFor="email"
-                                        >
-                                            Email address
-                                        </Label>
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            placeholder="Enter your email address"
-                                            state={
-                                                hasKey(errors, "email")
-                                                    ? "error"
-                                                    : "success"
-                                            }
-                                            showState={
-                                                !!hasKey(errors, "email")
-                                            }
-                                            {...register("email", {
-                                                required: "Email is required",
-                                                pattern: {
-                                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                                    message:
-                                                        "invalid email address",
-                                                },
-                                            })}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup mb="20px">
-                                        <Label
-                                            display="block"
-                                            mb="5px"
-                                            htmlFor="password"
-                                        >
-                                            Password
-                                        </Label>
-                                        <Input
-                                            id="password"
-                                            type="password"
-                                            placeholder="Enter your password"
-                                            state={
-                                                hasKey(errors, "password")
-                                                    ? "error"
-                                                    : "success"
-                                            }
-                                            showState={
-                                                !!hasKey(errors, "password")
-                                            }
-                                            {...register("password", {
-                                                required:
-                                                    "Password is required",
-                                                minLength: {
-                                                    value: 6,
-                                                    message:
-                                                        "Minimum length is 6",
-                                                },
-                                            })}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup mb="20px">
-                                        <Label
-                                            display="block"
-                                            mb="5px"
-                                            htmlFor="role_name"
-                                        >
-                                            Role
-                                        </Label>
-                                        <select
-                                            id="role_name"
-                                            {...register("role_name", {
-                                                required:
-                                                    "Role name is required",
-                                            })}
-                                        >
-                                            <option value="">
-                                                Select role
-                                            </option>
-                                            <option value="admin">Admin</option>
-                                        </select>
-                                    </FormGroup>
-                                    <Button
-                                        type="submit"
-                                        color="brand2"
-                                        fullwidth
-                                    >
-                                        Create user
-                                    </Button>
-                                </form>
-                            </CardBody>
-                        </Card>
+                        <CreateUserForm getUser={() => getUser()} />
                     </Col>
                     <Col lg={4} className="editUserCreateForm hide">
                         <Card width={["100%", "100%"]}>
@@ -485,8 +328,6 @@ const Users: React.FC = () => {
                                                 !!hasKey(errors, "password")
                                             }
                                             {...register("password", {
-                                                required:
-                                                    "Password is required",
                                                 minLength: {
                                                     value: 6,
                                                     message:
@@ -510,10 +351,7 @@ const Users: React.FC = () => {
                                                     "Role name is required",
                                             })}
                                         >
-                                            <option value="">
-                                                Select role
-                                            </option>
-                                            <option value="admin">Admin</option>
+                                            <RoleOption />
                                         </select>
                                     </FormGroup>
                                     <FormGroup mb="20px">
@@ -541,7 +379,7 @@ const Users: React.FC = () => {
                                         color="brand2"
                                         fullwidth
                                     >
-                                        Create user
+                                        Update user
                                     </Button>
                                 </form>
                             </CardBody>

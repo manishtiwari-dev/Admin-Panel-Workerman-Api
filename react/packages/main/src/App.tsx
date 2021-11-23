@@ -6,6 +6,7 @@ import "./App.css";
 
 const DashboardOne = lazy(() => import("./pages/dashboard-one"));
 const Users = lazy(() => import("./pages/user/index"));
+const Roles = lazy(() => import("./pages/role/index"));
 const DashboardTwo = lazy(() => import("./pages/dashboard-two"));
 const DashboardThree = lazy(() => import("./pages/dashboard-three"));
 const DashboardFour = lazy(() => import("./pages/dashboard-four"));
@@ -43,6 +44,7 @@ const App: React.FC = () => {
                             component={DashboardOne}
                         />
                         <ProtectedRoute exact path="/user" component={Users} />
+                        <ProtectedRoute exact path="/role" component={Roles} />
                         <ProtectedRoute
                             exact
                             path="/dashboard-two"

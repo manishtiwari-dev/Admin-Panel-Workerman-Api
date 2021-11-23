@@ -53,7 +53,9 @@ class UserController extends Controller
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
         $user_list = User::select('id','name','api_token','email','status','created_at')
-                    ->where('created_by',ApiHelper::get_user_id_from_token($api_token))->get();
+                    ->where('created_by',ApiHelper::get_user_id_from_token($api_token))
+                    ->orderBy('id','DESC')
+                    ->paginate();
         
         return ApiHelper::JSON_RESPONSE(true,$user_list,'');
     }
@@ -126,8 +128,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        // return ApiHelper::JSON_RESPONSE(true,$request->all(),'Profile updated successfully !');
         // Validate user page access
         $api_token = $request->api_token;
         if(!ApiHelper::is_page_access($api_token,'user.edit')){
@@ -135,7 +138,14 @@ class UserController extends Controller
         }
 
         $updateData = $request->only('name','status');
-        $status = User::find($id)->update($updateData);
+        if($request->has('password') && !empty($request->password))
+            $updateData['password'] = Hash::make($request->password); 
+        
+        $status = User::find($request->updatedId)->update($updateData);
+        
+        if($request->has('role_name') && !empty($request->role_name))
+            User::find($request->updatedId)->syncRoles($request->role_name);
+
         if($status)
             return ApiHelper::JSON_RESPONSE(true,[],'Profile updated successfully !');
         else
