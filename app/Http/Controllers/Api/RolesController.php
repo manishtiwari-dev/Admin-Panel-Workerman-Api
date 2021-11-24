@@ -25,7 +25,7 @@ class RolesController extends Controller
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
         
-        $role_list = Role::with('permissions')->where('created_by',ApiHelper::get_user_id_from_token($api_token))->get();
+        $role_list = Role::with('permissions')->where('created_by',ApiHelper::get_adminid_from_token($api_token))->get();
         return ApiHelper::JSON_RESPONSE(true,$role_list,'');
 
     }
@@ -53,7 +53,7 @@ class RolesController extends Controller
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
 
-        $user_id = ApiHelper::get_user_id_from_token($api_token);
+        $user_id = ApiHelper::get_adminid_from_token($api_token);
         
         $role_name = $request->role_name.$user_id;
         $status = Role::where('name',$role_name)->first();
@@ -120,7 +120,7 @@ class RolesController extends Controller
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
 
-        $user_id = ApiHelper::get_user_id_from_token($api_token);
+        $user_id = ApiHelper::get_adminid_from_token($api_token);
 
         $role_name = $request->role_name.$user_id;
 
@@ -150,17 +150,17 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         $api_token = $request->api_token;
+        $id = $request->deleteId;
+
         if(!ApiHelper::is_page_access($api_token,'role.destroy')){
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
-
         $role = Role::find($id);
         $role->revokePermissionTo($role->permissions);
         $status = Role::destroy($id);
-
         if($status) {
             return ApiHelper::JSON_RESPONSE(true,[],'Role deleted successfully');
         }else{

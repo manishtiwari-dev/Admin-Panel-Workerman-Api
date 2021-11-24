@@ -20,7 +20,12 @@ import Layout from "../../layouts";
 import Content from "../../layouts/content";
 import PageHeader from "../../components/page-header";
 import SEO from "../../components/seo";
-import { userUrl, editUserUrl, updateUserUrl } from "../../config";
+import {
+    userUrl,
+    editUserUrl,
+    updateUserUrl,
+    deleteUserUrl,
+} from "../../config";
 import { useAppSelector } from "../../redux/hooks";
 import CreateUserForm from "./createUserForm";
 import RoleOption from "../../components/user/RoleOption";
@@ -119,6 +124,23 @@ const Users: React.FC = () => {
                 } else {
                     alert(message);
                 }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const deleteUser = (userID: number) => {
+        const editData = {
+            api_token: apiToken,
+            deleteId: userID,
+        };
+        axios
+            .post(deleteUserUrl, editData)
+            .then((response: AxiosResponse) => {
+                console.log(response);
+                const { message } = response.data;
+                getUser();
+                alert(message);
             })
             .catch((error) => {
                 console.log(error);
@@ -236,6 +258,18 @@ const Users: React.FC = () => {
                                                                 }
                                                             >
                                                                 Edit
+                                                            </Button>
+                                                        </CheckPermission>
+                                                        &nbsp;
+                                                        <CheckPermission IsPageAccess="user.destroy">
+                                                            <Button
+                                                                onClick={() =>
+                                                                    deleteUser(
+                                                                        list.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
                                                             </Button>
                                                         </CheckPermission>
                                                     </td>

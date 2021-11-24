@@ -19,6 +19,7 @@ import {
     StyledDivider,
     StyledAvatar,
 } from "./style";
+import CheckPermission from "src/helper";
 
 const ProfileDropdown: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -86,10 +87,13 @@ const ProfileDropdown: React.FC = () => {
                     <LifeBuoy size="24" />
                     Forum
                 </StyledDropItem>
-                <StyledDropItem path="/profile-view" mt="10px">
-                    <Settings size="24" />
-                    Account Settings
-                </StyledDropItem>
+                <CheckPermission IsPageAccess="setting.update">
+                    <StyledDropItem path="/setting" mt="10px">
+                        <Settings size="24" />
+                        Account Settings
+                    </StyledDropItem>
+                </CheckPermission>
+
                 <StyledDropItem path="/profile-view" mt="10px">
                     <Settings size="24" />
                     Privacy Settings

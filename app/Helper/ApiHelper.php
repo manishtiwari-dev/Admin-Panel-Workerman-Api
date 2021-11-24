@@ -36,6 +36,20 @@ class ApiHelper
         return Self::get_parent_id($user->id);
     }
 
+    /* get admin_id from token */
+    public static function get_adminid_from_token($token){    
+        $user = User::with("roles")->where('api_token',$token)->first();   
+        if($user != null){
+            $role = $user->roles[0]->name; 
+            if($role == "superadmin" || $role == "admin")
+                return $user->id;
+            else
+                return $user->created_by;
+        }else
+            return 0;
+    }
+
+
     /* 
         crate custom json reponse 
     */

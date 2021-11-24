@@ -20,7 +20,12 @@ import Layout from "../../layouts";
 import Content from "../../layouts/content";
 import PageHeader from "../../components/page-header";
 import SEO from "../../components/seo";
-import { roleUrl, editRoleUrl, updateRoleUrl } from "../../config";
+import {
+    roleUrl,
+    editRoleUrl,
+    updateRoleUrl,
+    deleteRoleUrl,
+} from "../../config";
 import { useAppSelector } from "../../redux/hooks";
 import CreateRoleForm from "./create";
 import PermissionCheckbox from "../../components/user/PermissionCheckbox";
@@ -125,6 +130,23 @@ const Roles: React.FC = () => {
                 } else {
                     alert(message);
                 }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+    const deleteRole = (roleID: number) => {
+        const editData = {
+            api_token: apiToken,
+            deleteId: roleID,
+        };
+        axios
+            .post(deleteRoleUrl, editData)
+            .then((response: AxiosResponse) => {
+                console.log(response);
+                const { message } = response.data;
+                getRoles();
+                alert(message);
             })
             .catch((error) => {
                 console.log(error);
@@ -253,7 +275,7 @@ const Roles: React.FC = () => {
                                                         )}
                                                     </td>
                                                     <td>
-                                                        <CheckPermission IsPageAccess="user.edit">
+                                                        <CheckPermission IsPageAccess="role.edit">
                                                             <Button
                                                                 onClick={() =>
                                                                     editRole(
@@ -262,6 +284,18 @@ const Roles: React.FC = () => {
                                                                 }
                                                             >
                                                                 Edit
+                                                            </Button>
+                                                        </CheckPermission>
+                                                        &nbsp;
+                                                        <CheckPermission IsPageAccess="role.destroy">
+                                                            <Button
+                                                                onClick={() =>
+                                                                    deleteRole(
+                                                                        list.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
                                                             </Button>
                                                         </CheckPermission>
                                                     </td>

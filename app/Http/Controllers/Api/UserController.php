@@ -53,7 +53,7 @@ class UserController extends Controller
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
         $user_list = User::with("roles")->select('id','name','api_token','email','status','created_at')
-                    ->where('created_by',ApiHelper::get_user_id_from_token($api_token))
+                    ->where('created_by',ApiHelper::get_adminid_from_token($api_token))
                     ->orderBy('id','DESC')
                     ->paginate();
         
@@ -88,7 +88,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'created_by'=>ApiHelper::get_user_id_from_token($request->api_token),
+            'created_by'=>ApiHelper::get_adminid_from_token($request->api_token),
             'api_token'=>Hash::make($request->name),
         ]);
         $user->assignRole($request->role_name);
@@ -153,8 +153,25 @@ class UserController extends Controller
             
     }
 
-    public function user_list(){
-        return ApiHelper::JSON_RESPONSE(true,User::all(),'');
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request)
+    {
+        $api_token = $request->api_token;
+        $id = $request->deleteId;
+        if(!ApiHelper::is_page_access($api_token,'user.destroy')){
+            return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
+        }
+        $status = User::destroy($id);
+        if($status) {
+            return ApiHelper::JSON_RESPONSE(true,[],'User deleted successfully');
+        }else{
+            return ApiHelper::JSON_RESPONSE(false,[],'Not able to delete !');
+        }
     }
 
     

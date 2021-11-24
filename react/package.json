@@ -56,5 +56,8 @@
   },
   "resolutions": {
     "webpack": "4.44.2"
+  },
+  "dependencies": {
+    "react-data-table-component": "^7.4.5"
   }
 }
