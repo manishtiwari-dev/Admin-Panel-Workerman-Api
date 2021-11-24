@@ -52,7 +52,7 @@ class UserController extends Controller
         if(!ApiHelper::is_page_access($api_token,'user.view')){
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
-        $user_list = User::select('id','name','api_token','email','status','created_at')
+        $user_list = User::with("roles")->select('id','name','api_token','email','status','created_at')
                     ->where('created_by',ApiHelper::get_user_id_from_token($api_token))
                     ->orderBy('id','DESC')
                     ->paginate();

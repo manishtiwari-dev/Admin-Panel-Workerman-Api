@@ -9,8 +9,11 @@ interface PerInfo {
     id: number;
     name: string;
 }
+interface PropSType {
+    Compname: string;
+}
 
-const PermissionCheckbox: React.FC<any> = ({ ...props }: any) => {
+const PermissionCheckbox: React.FC<any> = ({ ...props }: PropSType) => {
     console.log(props);
     const { apiToken } = useAppSelector((state) => state.login);
     const [permissionList, setPermissionList] = useState<PerInfo[]>([]);
@@ -49,7 +52,7 @@ const PermissionCheckbox: React.FC<any> = ({ ...props }: any) => {
                         <Checkbox
                             key={list.id}
                             className="permissionBox"
-                            id={`${list.id}`}
+                            id={`${props.Compname}OR${list.id}`}
                             label={name}
                             name={props.Compname}
                             value={name}

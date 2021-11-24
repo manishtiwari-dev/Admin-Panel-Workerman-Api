@@ -10,19 +10,6 @@ const ProtectedRoute: FC<any> = ({
         (state) => state.login
     );
     const [isPageAccess, setPageAccess] = useState(false);
-    /* checking :  Is page access via role and permission */
-    // useEffect(() => {
-    //     if (role === "superadmin" || role === "admin") {
-    //         setPageAccess(true);
-    //     } else {
-    //         const allPermission = JSON.parse(permission);
-    //         console.log(restOfProps.path);
-    //         if (allPermission.indexOf(restOfProps.path)) {
-    //             setPageAccess(true);
-    //         }
-    //     }
-    // }, []);
-
     return (
         <Route
             {...restOfProps}

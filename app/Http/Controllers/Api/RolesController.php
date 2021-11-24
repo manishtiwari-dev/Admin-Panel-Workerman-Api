@@ -113,7 +113,7 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $api_token = $request->api_token;
         if(!ApiHelper::is_page_access($api_token,'role.edit')){
@@ -128,10 +128,10 @@ class RolesController extends Controller
 
         if($status !== null){
             $status->syncPermissions($request->permission_name);
-            return ApiHelper::JSON_RESPONSE(false,[],'Already updated role exist ! Sync Permissions done !');
+            return ApiHelper::JSON_RESPONSE(true,[],'Already updated role exist ! Sync Permissions done !');
         }else{
             
-            $role = Role::find($id)->update([
+            $role = Role::find($request->updateId)->update([
                 'name' => $role_name,
                 'created_by' => $user_id,
                 'display_name'=>$request->role_name

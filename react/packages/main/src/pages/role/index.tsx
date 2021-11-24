@@ -24,6 +24,7 @@ import { roleUrl, editRoleUrl, updateRoleUrl } from "../../config";
 import { useAppSelector } from "../../redux/hooks";
 import CreateRoleForm from "./create";
 import PermissionCheckbox from "../../components/user/PermissionCheckbox";
+import CheckPermission from "../../helper";
 
 interface Per {
     id: number;
@@ -39,6 +40,10 @@ interface FormData {
     name: string;
     permission_name: any;
     api_token: string;
+}
+interface AttrType {
+    qualifiedName: string;
+    value: boolean;
 }
 
 const Roles: React.FC = () => {
@@ -74,6 +79,7 @@ const Roles: React.FC = () => {
         const addUserelements = document.getElementsByClassName(
             "userCreateForm"
         );
+        addUserelements[0].classList.remove("show");
         addUserelements[0].classList.add("hide");
         const editData = {
             api_token: apiToken,
@@ -91,6 +97,31 @@ const Roles: React.FC = () => {
                     elements[0].classList.add("show");
                     setValue("updatedId", data.id);
                     setValue("role_name", data.display_name);
+                    // set all checked value to null
+                    const checkedList = document.querySelectorAll<HTMLInputElement>(
+                        'input[name="editpermissionList"]'
+                    );
+                    if (checkedList.length > 0) {
+                        for (let i = 0; i < checkedList.length; i += 1) {
+                            checkedList[i].removeAttribute("checked");
+                        }
+                    }
+                    // assign checked true to checkd permission
+                    if (data.permissions.length > 0) {
+                        for (
+                            let index = 0;
+                            index < data.permissions.length;
+                            index += 1
+                        ) {
+                            const nameString: string =
+                                data.permissions[index].name;
+                            document
+                                .querySelectorAll<HTMLInputElement>(
+                                    `input[value="${nameString}"]`
+                                )[1]
+                                .setAttribute("checked", "checked");
+                        }
+                    }
                 } else {
                     alert(message);
                 }
@@ -149,6 +180,17 @@ const Roles: React.FC = () => {
                 });
         }
     };
+    const toggleCreateClass = () => {
+        const editElement = document.getElementsByClassName(
+            "editUserCreateForm"
+        );
+        if (editElement.length > 0) {
+            editElement[0].classList.remove("show");
+            editElement[0].classList.add("hide");
+        }
+        const elements = document.getElementsByClassName("userCreateForm");
+        elements[0].classList.add("show");
+    };
     useEffect(() => {
         getRoles();
     }, []);
@@ -166,134 +208,165 @@ const Roles: React.FC = () => {
             <Content mt={[null, null, null, "0px"]}>
                 <Row>
                     <Col lg={8}>
-                        <Row gutters={10}>
-                            <Table>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Roles</th>
-                                        <th scope="col">Permission</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {rolelist &&
-                                        rolelist.map((list, index) => (
-                                            <tr key={list.id + 1}>
-                                                <th scope="row">{index + 1}</th>
-                                                <td>{list.display_name}</td>
-                                                <td>
-                                                    {list.permissions.map(
-                                                        (pers: Per) => (
-                                                            <span key={pers.id}>
-                                                                {pers.name}
-                                                                ,&nbsp;
-                                                            </span>
-                                                        )
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    <Button
-                                                        onClick={() =>
-                                                            editRole(list.id)
-                                                        }
-                                                    >
-                                                        Edit
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                </tbody>
-                            </Table>
-                        </Row>
+                        <CheckPermission IsPageAccess="role.create">
+                            <Row gutters={10} mb="20px">
+                                <Button
+                                    type="button"
+                                    color="brand2"
+                                    onClick={toggleCreateClass}
+                                >
+                                    Create Role
+                                </Button>
+                            </Row>
+                        </CheckPermission>
+                        <CheckPermission IsPageAccess="role.view">
+                            <Row gutters={10}>
+                                <Table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Roles</th>
+                                            <th scope="col">Permission</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {rolelist &&
+                                            rolelist.map((list, index) => (
+                                                <tr key={list.id + 1}>
+                                                    <th scope="row">
+                                                        {index + 1}
+                                                    </th>
+                                                    <td>{list.display_name}</td>
+                                                    <td>
+                                                        {list.permissions.map(
+                                                            (pers: Per) => (
+                                                                <span
+                                                                    key={
+                                                                        pers.id
+                                                                    }
+                                                                >
+                                                                    {pers.name}
+                                                                    ,&nbsp;
+                                                                </span>
+                                                            )
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        <CheckPermission IsPageAccess="user.edit">
+                                                            <Button
+                                                                onClick={() =>
+                                                                    editRole(
+                                                                        list.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Edit
+                                                            </Button>
+                                                        </CheckPermission>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                    </tbody>
+                                </Table>
+                            </Row>
+                        </CheckPermission>
                     </Col>
                     <Col lg={4} className="userCreateForm">
-                        <CreateRoleForm getRoles={() => getRoles()} />
+                        <CheckPermission IsPageAccess="role.create">
+                            <CreateRoleForm getRoles={() => getRoles()} />
+                        </CheckPermission>
                     </Col>
                     <Col lg={4} className="editUserCreateForm hide">
-                        <Card width={["100%", "100%"]}>
-                            <CardHeader>
-                                <CardTitle as="h5">Edit Role</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                {msgType.length > 2 &&
-                                    (msgType === "success" ? (
-                                        <Alert
-                                            color="success"
-                                            isDismissible
-                                            variant="contained"
-                                            solid={false}
-                                            hasLink={false}
-                                            hasIcon={false}
-                                        >
-                                            {errorMsg}
-                                        </Alert>
-                                    ) : (
-                                        <Alert
-                                            color="danger"
-                                            isDismissible
-                                            variant="contained"
-                                            solid={false}
-                                            hasLink={false}
-                                            hasIcon={false}
-                                        >
-                                            {errorMsg}
-                                        </Alert>
-                                    ))}
-                                <form
-                                    action="#"
-                                    onSubmit={handleSubmit(onSubmit)}
-                                    noValidate
-                                >
-                                    <input
-                                        {...register("updatedId")}
-                                        type="hidden"
-                                    />
-                                    <FormGroup mb="20px">
-                                        <Label
-                                            display="block"
-                                            mb="5px"
-                                            htmlFor="name"
-                                        >
-                                            Role Name
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            placeholder="Enter your name"
-                                            feedbackText={errors?.name?.message}
-                                            state={
-                                                hasKey(errors, "name")
-                                                    ? "error"
-                                                    : "success"
-                                            }
-                                            showState={!!hasKey(errors, "name")}
-                                            {...register("role_name", {
-                                                required:
-                                                    "Role Name is required",
-                                            })}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup mb="20px">
-                                        <Label
-                                            display="block"
-                                            mb="5px"
-                                            htmlFor="permissionList"
-                                        >
-                                            Permission List
-                                        </Label>
-                                        <PermissionCheckbox Compname="editpermissionList" />
-                                    </FormGroup>
-                                    <Button
-                                        type="submit"
-                                        color="brand2"
-                                        fullwidth
+                        <CheckPermission IsPageAccess="role.create">
+                            <Card width={["100%", "100%"]}>
+                                <CardHeader>
+                                    <CardTitle as="h5">Edit Role</CardTitle>
+                                </CardHeader>
+                                <CardBody>
+                                    {msgType.length > 2 &&
+                                        (msgType === "success" ? (
+                                            <Alert
+                                                color="success"
+                                                isDismissible
+                                                variant="contained"
+                                                solid={false}
+                                                hasLink={false}
+                                                hasIcon={false}
+                                            >
+                                                {errorMsg}
+                                            </Alert>
+                                        ) : (
+                                            <Alert
+                                                color="danger"
+                                                isDismissible
+                                                variant="contained"
+                                                solid={false}
+                                                hasLink={false}
+                                                hasIcon={false}
+                                            >
+                                                {errorMsg}
+                                            </Alert>
+                                        ))}
+                                    <form
+                                        action="#"
+                                        onSubmit={handleSubmit(onSubmit)}
+                                        noValidate
                                     >
-                                        Update Role
-                                    </Button>
-                                </form>
-                            </CardBody>
-                        </Card>
+                                        <input
+                                            {...register("updatedId")}
+                                            type="hidden"
+                                        />
+                                        <FormGroup mb="20px">
+                                            <Label
+                                                display="block"
+                                                mb="5px"
+                                                htmlFor="name"
+                                            >
+                                                Role Name
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                type="text"
+                                                placeholder="Enter your name"
+                                                feedbackText={
+                                                    errors?.name?.message
+                                                }
+                                                state={
+                                                    hasKey(errors, "name")
+                                                        ? "error"
+                                                        : "success"
+                                                }
+                                                showState={
+                                                    !!hasKey(errors, "name")
+                                                }
+                                                {...register("role_name", {
+                                                    required:
+                                                        "Role Name is required",
+                                                })}
+                                            />
+                                        </FormGroup>
+                                        <FormGroup mb="20px">
+                                            <Label
+                                                display="block"
+                                                mb="5px"
+                                                htmlFor="permissionList"
+                                            >
+                                                Permission List
+                                            </Label>
+                                            <PermissionCheckbox Compname="editpermissionList" />
+                                        </FormGroup>
+                                        <Button
+                                            type="submit"
+                                            color="brand2"
+                                            fullwidth
+                                        >
+                                            Update Role
+                                        </Button>
+                                    </form>
+                                </CardBody>
+                            </Card>
+                        </CheckPermission>
                     </Col>
                 </Row>
             </Content>
