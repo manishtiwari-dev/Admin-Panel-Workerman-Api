@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, ReactNode } from "react";
+import React from "react";
 import { useAppSelector } from "../redux/hooks";
 
 interface CheckInfo {
@@ -12,8 +12,12 @@ const CheckPermission: React.FC<any> = ({ ...props }) => {
         return <>{children}</>;
     }
     const permissionList = JSON.parse(permission);
-    if (permissionList.includes(IsPageAccess)) {
-        return <>{children}</>;
+    if (permissionList !== null) {
+        if (permissionList.length > 0) {
+            if (permissionList.includes(IsPageAccess)) {
+                return <>{children}</>;
+            }
+        }
     }
     return null;
 };

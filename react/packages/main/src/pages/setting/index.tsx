@@ -1,35 +1,11 @@
-import React, { useEffect, useState } from "react";
-import axios, { AxiosResponse } from "axios";
-import {
-    Row,
-    Col,
-    Table,
-    Card,
-    CardHeader,
-    CardBody,
-    CardTitle,
-    Button,
-    Label,
-    FormGroup,
-    Input,
-    Alert,
-} from "@doar/components";
-import { useForm } from "react-hook-form";
-import { hasKey } from "@doar/shared/methods";
+import React from "react";
+import { Media, MediaBody } from "@doar/components";
 import Layout from "../../layouts";
 import Content from "../../layouts/content";
-import PageHeader from "../../components/page-header";
 import SEO from "../../components/seo";
-import {
-    roleUrl,
-    editRoleUrl,
-    updateRoleUrl,
-    deleteRoleUrl,
-} from "../../config";
-import { useAppSelector } from "../../redux/hooks";
-import CheckPermission from "../../helper";
-import PaymentSetting from "./component/paymentSetting";
+import SideBarSetting from "./component/sidebarSetting";
 import WebsiteSetting from "./component/websiteSetting";
+import PageHeader from "../../components/page-header";
 
 const AccountSetting: React.FC = () => {
     return (
@@ -43,14 +19,15 @@ const AccountSetting: React.FC = () => {
                 />
             </Content>
             <Content mt={[null, null, null, "0px"]}>
-                <Row>
-                    <Col lg={4}>
+                <Media display={["block", null, null, "flex"]}>
+                    <SideBarSetting />
+                    <MediaBody
+                        mt={["40px", null, null, 0]}
+                        px={[null, null, null, "10px"]}
+                    >
                         <WebsiteSetting />
-                    </Col>
-                    <Col lg={4}>
-                        <PaymentSetting />
-                    </Col>
-                </Row>
+                    </MediaBody>
+                </Media>
             </Content>
         </Layout>
     );

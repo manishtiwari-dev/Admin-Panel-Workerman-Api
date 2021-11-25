@@ -1,31 +1,27 @@
-import React, { useState } from "react";
-import axios, { AxiosResponse } from "axios";
+import { FC } from "react";
+import { MoreHorizontal, ThumbsUp, MessageSquare, Share } from "react-feather";
 import {
+    CardBody,
+    Heading,
+    Anchor,
     Card,
     CardHeader,
-    CardBody,
     CardTitle,
+    Row,
+    Col,
     Button,
     Label,
     FormGroup,
     Input,
-    Alert,
 } from "@doar/components";
+import image from "@doar/shared/images/img15.jpg";
 import { useForm } from "react-hook-form";
 import { hasKey } from "@doar/shared/methods";
-import { useAppSelector } from "../../../redux/hooks";
+import Header from "../header";
+import Footer from "../footer";
+import { StyledCard, StyledRole, StyledTime, StyledGrayBox } from "./style";
 
-interface FormData {
-    name: string;
-    permission_name: any;
-    api_token: string;
-}
-
-const WebsiteSetting: React.FC<any> = ({ ...props }: any) => {
-    console.log(props);
-    const { apiToken } = useAppSelector((state) => state.login);
-    const [msgType, setMsgType] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
+const WebsiteSetting: FC = () => {
     const {
         register,
         handleSubmit,
@@ -35,34 +31,51 @@ const WebsiteSetting: React.FC<any> = ({ ...props }: any) => {
         console.log(formData);
     };
     return (
-        <Card width={["100%", "100%"]}>
-            <CardHeader>
-                <CardTitle as="h5">Website Setting</CardTitle>
-            </CardHeader>
+        <StyledCard mb={["20px", null, null, "25px"]}>
+            <Header>
+                <Heading tt="uppercase" fontWeight="600" mb="0px">
+                    General Setting
+                </Heading>
+                <Anchor path="#!" variant="link3">
+                    <MoreHorizontal width={18} height={18} />
+                </Anchor>
+            </Header>
             <CardBody>
                 <form action="#" onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <FormGroup mb="20px">
-                        <Label display="block" mb="5px" htmlFor="name">
-                            Website name
-                        </Label>
-                        <Input
-                            id="name"
-                            type="text"
-                            placeholder="Enter your website name"
-                            feedbackText={errors?.name?.message}
-                            state={hasKey(errors, "name") ? "error" : "success"}
-                            showState={!!hasKey(errors, "name")}
-                            {...register("role_name", {
-                                required: "Role Name is required",
-                            })}
-                        />
-                    </FormGroup>
-                    <Button type="submit" color="brand2" fullwidth>
-                        Update
-                    </Button>
+                    <Row>
+                        <Col lg={4}>
+                            <FormGroup mb="20px">
+                                <Label display="block" mb="5px" htmlFor="name">
+                                    Website name
+                                </Label>
+                                <Input
+                                    id="webisteName"
+                                    type="text"
+                                    placeholder="Enter website name"
+                                    feedbackText={errors?.name?.message}
+                                    state={
+                                        hasKey(errors, "name")
+                                            ? "error"
+                                            : "success"
+                                    }
+                                    showState={!!hasKey(errors, "name")}
+                                    {...register("website_name", {
+                                        required: "Website name is required",
+                                    })}
+                                />
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col lg={4}>
+                            <Button type="submit" color="brand2">
+                                Update
+                            </Button>
+                        </Col>
+                    </Row>
                 </form>
             </CardBody>
-        </Card>
+        </StyledCard>
     );
 };
 

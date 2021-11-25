@@ -16,6 +16,7 @@ import { hasKey } from "@doar/shared/methods";
 import { createUserUrl } from "../../config";
 import { useAppSelector } from "../../redux/hooks";
 import RoleOption from "../../components/user/RoleOption";
+import { Trans } from "../../lang";
 
 interface FormData {
     name: string;
@@ -27,7 +28,7 @@ interface FormData {
 
 const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
     console.log(props);
-    const { apiToken } = useAppSelector((state) => state.login);
+    const { apiToken, language } = useAppSelector((state) => state.login);
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const {
@@ -71,7 +72,7 @@ const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
     return (
         <Card width={["100%", "100%"]}>
             <CardHeader>
-                <CardTitle as="h5">Add User</CardTitle>
+                <CardTitle as="h5">{Trans("ADD_USER", language)}</CardTitle>
             </CardHeader>
             <CardBody>
                 {msgType.length > 2 &&
@@ -101,7 +102,7 @@ const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
                 <form action="#" onSubmit={handleSubmit(onSubmit)} noValidate>
                     <FormGroup mb="20px">
                         <Label display="block" mb="5px" htmlFor="name">
-                            User Name
+                            {Trans("NAME", language)}
                         </Label>
                         <Input
                             id="name"
@@ -117,7 +118,7 @@ const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
                     </FormGroup>
                     <FormGroup mb="20px">
                         <Label display="block" mb="5px" htmlFor="email">
-                            Email address
+                            {Trans("EMAIL_A", language)}
                         </Label>
                         <Input
                             id="email"
@@ -138,7 +139,7 @@ const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
                     </FormGroup>
                     <FormGroup mb="20px">
                         <Label display="block" mb="5px" htmlFor="password">
-                            Password
+                            {Trans("PASSWORD", language)}
                         </Label>
                         <Input
                             id="password"
@@ -159,7 +160,7 @@ const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
                     </FormGroup>
                     <FormGroup mb="20px">
                         <Label display="block" mb="5px" htmlFor="role_name">
-                            Role
+                            {Trans("ROLE", language)}
                         </Label>
                         <select
                             id="role_name"
@@ -171,7 +172,7 @@ const CreateUserForm: React.FC<any> = ({ ...props }: any) => {
                         </select>
                     </FormGroup>
                     <Button type="submit" color="brand2" fullwidth>
-                        Create user
+                        {Trans("CREATE_USER", language)}
                     </Button>
                 </form>
             </CardBody>

@@ -13,6 +13,8 @@
         "src",
         "src/*",
         "src/**/*",
+        "src/lang/*",
+        "src/lang/*.json",
         "config-overrides.js"
     ]
 }

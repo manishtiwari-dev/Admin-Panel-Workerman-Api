@@ -16,6 +16,7 @@ import { hasKey } from "@doar/shared/methods";
 import { createRoleUrl } from "../../config";
 import { useAppSelector } from "../../redux/hooks";
 import PermissionCheckbox from "../../components/user/PermissionCheckbox";
+import { Trans } from "../../lang";
 
 interface FormData {
     name: string;
@@ -25,7 +26,7 @@ interface FormData {
 
 const CreateRoleForm: React.FC<any> = ({ ...props }: any) => {
     console.log(props);
-    const { apiToken } = useAppSelector((state) => state.login);
+    const { apiToken, language } = useAppSelector((state) => state.login);
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const {
@@ -87,7 +88,7 @@ const CreateRoleForm: React.FC<any> = ({ ...props }: any) => {
     return (
         <Card width={["100%", "100%"]}>
             <CardHeader>
-                <CardTitle as="h5">Add Role</CardTitle>
+                <CardTitle as="h5">{Trans("ADD_ROLE", language)}</CardTitle>
             </CardHeader>
             <CardBody>
                 {msgType.length > 2 &&
@@ -117,7 +118,7 @@ const CreateRoleForm: React.FC<any> = ({ ...props }: any) => {
                 <form action="#" onSubmit={handleSubmit(onSubmit)} noValidate>
                     <FormGroup mb="20px">
                         <Label display="block" mb="5px" htmlFor="name">
-                            Role Name
+                            {Trans("ROLE_NAME", language)}
                         </Label>
                         <Input
                             id="name"
@@ -137,12 +138,12 @@ const CreateRoleForm: React.FC<any> = ({ ...props }: any) => {
                             mb="5px"
                             htmlFor="permissionList"
                         >
-                            Permission List
+                            {Trans("PERMISSION", language)}
                         </Label>
                         <PermissionCheckbox Compname="permissionList" />
                     </FormGroup>
                     <Button type="submit" color="brand2" fullwidth>
-                        Create Role
+                        {Trans("CREATE", language)}
                     </Button>
                 </form>
             </CardBody>

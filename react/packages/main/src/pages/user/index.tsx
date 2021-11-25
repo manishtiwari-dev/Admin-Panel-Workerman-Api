@@ -30,6 +30,7 @@ import { useAppSelector } from "../../redux/hooks";
 import CreateUserForm from "./createUserForm";
 import RoleOption from "../../components/user/RoleOption";
 import CheckPermission from "../../helper";
+import { Trans } from "../../lang";
 
 interface Info {
     id: number;
@@ -54,7 +55,7 @@ interface RolesInfo {
 }
 
 const Users: React.FC = () => {
-    const { apiToken } = useAppSelector((state) => state.login);
+    const { apiToken, language } = useAppSelector((state) => state.login);
     const [colSize, setColSize] = useState(12);
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
@@ -189,9 +190,11 @@ const Users: React.FC = () => {
             <SEO />
             <Content borderBottomWidth="1px">
                 <PageHeader
-                    prev={[{ text: "Dashboard", link: "/" }]}
-                    title="Users"
-                    wcText="User List"
+                    prev={[
+                        { text: `${Trans("DASHBOARD", language)}`, link: "/" },
+                    ]}
+                    title={Trans("USERS", language)}
+                    wcText={Trans("USER_LIST", language)}
                 />
             </Content>
             <Content mt={[null, null, null, "0px"]}>
@@ -204,7 +207,7 @@ const Users: React.FC = () => {
                                     color="brand2"
                                     onClick={toggleCreateClass}
                                 >
-                                    Create user
+                                    {Trans("CREATE_USER", language)}
                                 </Button>
                             </Row>
                         </CheckPermission>
@@ -213,12 +216,24 @@ const Users: React.FC = () => {
                                 <Table>
                                     <thead>
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Role</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Action</th>
+                                            <th scope="col">
+                                                {Trans("ID", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("NAME", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("EMAIL", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("ROLE", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("STATUS", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("ACTION", language)}
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -289,7 +304,9 @@ const Users: React.FC = () => {
                         <Col lg={4} className="editUserCreateForm hide">
                             <Card width={["100%", "100%"]}>
                                 <CardHeader>
-                                    <CardTitle as="h5">Edit User</CardTitle>
+                                    <CardTitle as="h5">
+                                        {Trans("EDIT_USER", language)}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardBody>
                                     {msgType.length > 2 &&
@@ -331,7 +348,7 @@ const Users: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="name"
                                             >
-                                                User Name
+                                                {Trans("NAME", language)}
                                             </Label>
                                             <Input
                                                 id="name"
@@ -360,7 +377,7 @@ const Users: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="email"
                                             >
-                                                Email address
+                                                {Trans("EMAIL_A", language)}
                                             </Label>
                                             <Input
                                                 id="email"
@@ -392,7 +409,7 @@ const Users: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="password"
                                             >
-                                                Password
+                                                {Trans("PASSWORD", language)}
                                             </Label>
                                             <Input
                                                 id="password"
@@ -421,7 +438,7 @@ const Users: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="role_name"
                                             >
-                                                Role
+                                                {Trans("ROLE", language)}
                                             </Label>
                                             <select
                                                 id="role_name"
@@ -439,7 +456,7 @@ const Users: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="status"
                                             >
-                                                Status
+                                                {Trans("STATUS", language)}
                                             </Label>
                                             <select
                                                 id="status"
@@ -458,7 +475,7 @@ const Users: React.FC = () => {
                                             color="brand2"
                                             fullwidth
                                         >
-                                            Update user
+                                            {Trans("UPDATE_USER", language)}
                                         </Button>
                                     </form>
                                 </CardBody>

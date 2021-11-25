@@ -8,6 +8,7 @@ export interface LoginvalState {
     name: any;
     role: any;
     permission: any;
+    language: string;
 }
 
 const initialState: LoginvalState = {
@@ -16,6 +17,7 @@ const initialState: LoginvalState = {
     permission: localStorage.getItem("permission"),
     name: localStorage.getItem("username"),
     isAuthenticated: localStorage.getItem("access_token") !== null,
+    language: "en",
 };
 
 const loginSlice = createSlice({
@@ -33,6 +35,7 @@ const loginSlice = createSlice({
             state.role = role;
             state.isAuthenticated = true;
             state.permission = JSON.stringify(permission);
+            state.language = "en";
             localStorage.setItem("access_token", apiToken);
             localStorage.setItem("role", role);
             localStorage.setItem("permission", JSON.stringify(permission));

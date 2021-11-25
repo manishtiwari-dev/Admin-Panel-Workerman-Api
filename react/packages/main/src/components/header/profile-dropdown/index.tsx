@@ -9,6 +9,7 @@ import {
 } from "@doar/components";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import CheckPermission from "src/helper";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { logoutState } from "../../../redux/slices/login";
 import {
@@ -19,7 +20,6 @@ import {
     StyledDivider,
     StyledAvatar,
 } from "./style";
-import CheckPermission from "src/helper";
 
 const ProfileDropdown: React.FC = () => {
     const dispatch = useAppDispatch();

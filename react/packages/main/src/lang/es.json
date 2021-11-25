@@ -1,0 +1,23 @@
+{
+    "DASHBAORD": "Dashboard",
+    "CREATE_USER": "Create User",
+    "EDIT_USER": "Edit User",
+    "USER": "User",
+    "USERS": "Users",
+    "USER_LIST": "User List",
+    "ROLE": "Role",
+    "ROLES": "Roles",
+    "CREATE_ROLE": "Create Role",
+    "EDIT_ROLE": "Edit Role",
+    "ROLE_LIST": "Role List",
+    "SETTING": "Setting",
+    "G_SETTING": "General Setting",
+    "WEB_SETTING": "Website Setting",
+    "PAY_SETTING": "Payment Setting",
+    "NAME": "Name",
+    "EMAIL": "Email",
+    "EMAIL_A": "Email Address",
+    "PASSWORD": "Password",
+    "PHONE": "Phone",
+    "MOBILE": "Mobile"
+}

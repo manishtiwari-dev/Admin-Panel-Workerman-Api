@@ -30,6 +30,7 @@ import { useAppSelector } from "../../redux/hooks";
 import CreateRoleForm from "./create";
 import PermissionCheckbox from "../../components/user/PermissionCheckbox";
 import CheckPermission from "../../helper";
+import { Trans } from "../../lang";
 
 interface Per {
     id: number;
@@ -52,7 +53,7 @@ interface AttrType {
 }
 
 const Roles: React.FC = () => {
-    const { apiToken } = useAppSelector((state) => state.login);
+    const { apiToken, language } = useAppSelector((state) => state.login);
     const [rolelist, SetRoleList] = useState<Info[]>([]);
     const [editRoleData, SeteditRoleData] = useState<Info[]>([]);
     const {
@@ -222,9 +223,11 @@ const Roles: React.FC = () => {
             <SEO />
             <Content borderBottomWidth="1px">
                 <PageHeader
-                    prev={[{ text: "Dashboard", link: "/" }]}
-                    title="Roles"
-                    wcText="Role List"
+                    prev={[
+                        { text: `${Trans("DASHBOARD", language)}`, link: "/" },
+                    ]}
+                    title={Trans("ROLES", language)}
+                    wcText={Trans("ROLE_LIST", language)}
                 />
             </Content>
             <Content mt={[null, null, null, "0px"]}>
@@ -237,7 +240,7 @@ const Roles: React.FC = () => {
                                     color="brand2"
                                     onClick={toggleCreateClass}
                                 >
-                                    Create Role
+                                    {Trans("CREATE_ROLE", language)}
                                 </Button>
                             </Row>
                         </CheckPermission>
@@ -246,10 +249,18 @@ const Roles: React.FC = () => {
                                 <Table>
                                     <thead>
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Roles</th>
-                                            <th scope="col">Permission</th>
-                                            <th scope="col">Action</th>
+                                            <th scope="col">
+                                                {Trans("ID", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("ROLES", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("PERMISSION", language)}
+                                            </th>
+                                            <th scope="col">
+                                                {Trans("ACTION", language)}
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -315,7 +326,9 @@ const Roles: React.FC = () => {
                         <CheckPermission IsPageAccess="role.create">
                             <Card width={["100%", "100%"]}>
                                 <CardHeader>
-                                    <CardTitle as="h5">Edit Role</CardTitle>
+                                    <CardTitle as="h5">
+                                        {Trans("EDIT_ROLE", language)}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardBody>
                                     {msgType.length > 2 &&
@@ -357,7 +370,7 @@ const Roles: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="name"
                                             >
-                                                Role Name
+                                                {Trans("ROLE_NAME", language)}
                                             </Label>
                                             <Input
                                                 id="name"
@@ -386,7 +399,7 @@ const Roles: React.FC = () => {
                                                 mb="5px"
                                                 htmlFor="permissionList"
                                             >
-                                                Permission List
+                                                {Trans("PERMISSION", language)}
                                             </Label>
                                             <PermissionCheckbox Compname="editpermissionList" />
                                         </FormGroup>
@@ -395,7 +408,7 @@ const Roles: React.FC = () => {
                                             color="brand2"
                                             fullwidth
                                         >
-                                            Update Role
+                                            {Trans("UPDATE", language)}
                                         </Button>
                                     </form>
                                 </CardBody>
