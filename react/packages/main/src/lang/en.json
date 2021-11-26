@@ -29,5 +29,13 @@
     "UPDATE":"Update",
     "ROLE_NAME":"Role Name",
     "ADD_ROLE":"Add Role",
-    "CREATE":"Create"
+    "CREATE":"Create",
+    "DEFAULT_LANG":"Default Language",
+    "WEBSITE_NAME":"Website Name",
+    "WEBSITE_LOGO":"Website Logo",
+    "CURRENCY":"Currency",
+    "PAYTM_MODE":"Paytm Mode",
+    "PAYTM_ENABLE":"Paytm Status",
+    "PAYTM_KEY":"Paytm Mechant Key",
+    "PAYTM_SECRET":"Paytm Secret Key"
 }

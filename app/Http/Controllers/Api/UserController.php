@@ -46,18 +46,41 @@ class UserController extends Controller
     /* get all userlist */
     public function index(Request $request)
     {
-
         // Validate user page access
         $api_token = $request->api_token;
         if(!ApiHelper::is_page_access($api_token,'user.view')){
             return ApiHelper::JSON_RESPONSE(false,[],'Page access denied !');
         }
-        $user_list = User::with("roles")->select('id','name','api_token','email','status','created_at')
-                    ->where('created_by',ApiHelper::get_adminid_from_token($api_token))
-                    ->orderBy('id','DESC')
-                    ->paginate();
+
+        $current_page = !empty($request->page)?$request->page:1;
+        $perPage = !empty($request->perPage)?$request->perPage:10;
+        $search = $request->search;
+        $sortBy = $request->sortBy;
+        $orderBy = $request->orderBy;
         
-        return ApiHelper::JSON_RESPONSE(true,$user_list,'');
+        $user_query = User::with("roles")->select('id','name','api_token','email','status','created_at')
+                    ->where('created_by',ApiHelper::get_adminid_from_token($api_token));
+        
+        /* order by sorting */
+        if(!empty($sortBy) && !empty($orderBy))
+            $user_query = $user_query->orderBy($sortBy,$orderBy);
+        else
+            $user_query = $user_query->orderBy('id','DESC');
+                    
+        $skip = ($current_page == 1)?0:(int)($current_page-1)*$perPage;
+        
+        $user_count = $user_query->count();
+
+        $user_list = $user_query->skip($skip)->take($perPage)->get();
+        
+        $res = [
+            'data'=>$user_list,
+            'current_page'=>$current_page,
+            'total_records'=>$user_count,
+            'total_page'=>ceil((int)$user_count/(int)$perPage),
+            'per_page'=>$perPage,
+        ];
+        return ApiHelper::JSON_RESPONSE(true,$res,'');
     }
 
 

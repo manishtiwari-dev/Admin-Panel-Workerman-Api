@@ -31,6 +31,7 @@ import CreateUserForm from "./createUserForm";
 import RoleOption from "../../components/user/RoleOption";
 import CheckPermission from "../../helper";
 import { Trans } from "../../lang";
+import Pagination from "../component/pagination/index";
 
 interface Info {
     id: number;
@@ -53,6 +54,10 @@ interface RolesInfo {
     name: string;
     display_name: string;
 }
+interface Pagi {
+    total_page: number;
+    currentPage: number;
+}
 
 const Users: React.FC = () => {
     const { apiToken, language } = useAppSelector((state) => state.login);
@@ -60,6 +65,8 @@ const Users: React.FC = () => {
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [userlist, SetUserList] = useState<Info[]>([]);
+    const [Pagi, SetPagi] = useState(0);
+    const [currPage, SetcurrPage] = useState(0);
     const {
         register,
         handleSubmit,
@@ -69,14 +76,22 @@ const Users: React.FC = () => {
     const getUser = () => {
         const formData = {
             api_token: apiToken,
+            page: 1,
+            perPage: 10,
+            search: "",
+            sortBy: "id",
+            orderBY: "ASC",
         };
         axios
             .post(userUrl, formData)
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { status, data, message } = response.data;
-                if (status) SetUserList(data.data);
-                else alert(message);
+                if (status) {
+                    SetUserList(data.data);
+                    SetPagi(data.total_page);
+                    SetcurrPage(data.current_page);
+                } else alert(message);
             })
             .catch((error) => {
                 alert("Something went wrong !");
@@ -292,6 +307,11 @@ const Users: React.FC = () => {
                                             ))}
                                     </tbody>
                                 </Table>
+                                <Pagination
+                                    totalPage={Pagi}
+                                    currPage={currPage}
+                                    getUser={() => getUser()}
+                                />
                             </Row>
                         </CheckPermission>
                     </Col>

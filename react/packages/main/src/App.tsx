@@ -53,6 +53,11 @@ const App: React.FC = () => {
                         />
                         <ProtectedRoute
                             exact
+                            path="/setting/:pagetype"
+                            component={AccountSetting}
+                        />
+                        <ProtectedRoute
+                            exact
                             path="/dashboard-two"
                             component={DashboardTwo}
                         />

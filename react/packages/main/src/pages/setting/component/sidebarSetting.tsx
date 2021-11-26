@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Globe, GitHub, Twitter, Instagram, Facebook } from "react-feather";
-import { Anchor } from "@doar/components";
+import { Link } from "react-router-dom";
+import { Globe } from "react-feather";
 import { StyledItem } from "./style";
 
 const SideBarSetting: FC = () => {
@@ -9,15 +9,33 @@ const SideBarSetting: FC = () => {
             <ul>
                 <StyledItem>
                     <Globe width={18} height={18} strokeWidth="2.3px" />
-                    <Anchor color="text2" path="setting">
+                    <Link
+                        to="/setting/general"
+                        color="text2"
+                        className="current"
+                    >
                         General setting
-                    </Anchor>
+                    </Link>
                 </StyledItem>
                 <StyledItem>
                     <Globe width={18} height={18} strokeWidth="2.3px" />
-                    <Anchor color="text2" path="setting">
+                    <Link
+                        to="/setting/payment"
+                        color="text2"
+                        className="active"
+                    >
+                        Payment setting
+                    </Link>
+                </StyledItem>
+                <StyledItem>
+                    <Globe width={18} height={18} strokeWidth="2.3px" />
+                    <Link
+                        to="/setting/website"
+                        color="text2"
+                        className="active"
+                    >
                         Website setting
-                    </Anchor>
+                    </Link>
                 </StyledItem>
             </ul>
         </>

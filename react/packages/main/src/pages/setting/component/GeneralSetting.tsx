@@ -9,28 +9,26 @@ import {
     Button,
     Label,
     FormGroup,
-    Input,
     Alert,
-    Spinner,
 } from "@doar/components";
 import { useForm } from "react-hook-form";
 import axios, { AxiosResponse } from "axios";
-import { hasKey } from "@doar/shared/methods";
-import { paymentSettingUrl, paymentSettingFirstUrl } from "src/config";
-import { useAppSelector } from "../../../redux/hooks";
+import { generalSettingUrl, generalSettingFirstUrl } from "src/config";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import Header from "../header";
 import { StyledCard } from "./style";
 import { Trans } from "../../../lang";
+import { updateLangState } from "../../../redux/slices/login";
 
 interface FormData {
-    paytm_status: "on" | "off";
-    paytm_mode: "live" | "sandbox";
-    paytm_merchant_key: string;
-    paytm_secret_key: string;
+    website_name: string;
+    currency: "USD" | "INR";
     api_token: string;
+    default_language: string;
 }
 
-const PaymentSetting: FC = () => {
+const GeneralSetting: FC = () => {
+    const dispatch = useAppDispatch();
     const { apiToken, language } = useAppSelector((state) => state.login);
     const [msgType, setMsgType] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
@@ -45,17 +43,15 @@ const PaymentSetting: FC = () => {
             api_token: apiToken,
         };
         axios
-            .post(paymentSettingFirstUrl, formData)
+            .post(generalSettingFirstUrl, formData)
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { status, data, message } = response.data;
                 console.log(data);
                 if (data !== null) {
                     console.log("dsf");
-                    setValue("paytm_status", data.paytm_status);
-                    setValue("paytm_mode", data.paytm_mode);
-                    setValue("paytm_merchant_key", data.paytm_merchant_key);
-                    setValue("paytm_secret_key", data.paytm_secret_key);
+                    setValue("default_language", data.default_language);
+                    setValue("currency", data.currency);
                 }
             })
             .catch((error) => {
@@ -68,11 +64,12 @@ const PaymentSetting: FC = () => {
         saveFormData.api_token = apiToken;
         console.log(saveFormData);
         axios
-            .post(paymentSettingUrl, saveFormData)
+            .post(generalSettingUrl, saveFormData)
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { status, message } = response.data;
                 if (status) {
+                    dispatch(updateLangState(formData.default_language));
                     setMsgType("success");
                     setErrorMsg(message);
                 } else {
@@ -102,7 +99,7 @@ const PaymentSetting: FC = () => {
         <StyledCard mb={["20px", null, null, "25px"]}>
             <Header>
                 <Heading tt="uppercase" fontWeight="600" mb="0px">
-                    {Trans("PAY_SETTING", language)}
+                    {Trans("G_SETTING", language)}
                 </Heading>
                 <Anchor path="#!" variant="link3">
                     <MoreHorizontal width={18} height={18} />
@@ -140,96 +137,44 @@ const PaymentSetting: FC = () => {
                     noValidate
                 >
                     <Row>
-                        <Col lg={3}>
+                        <Col lg={4}>
                             <FormGroup mb="20px">
                                 <Label
                                     display="block"
                                     mb="5px"
-                                    htmlFor="paytm_status"
+                                    htmlFor="default_language"
                                 >
-                                    {Trans("PAYTM_ENABLE", language)}
+                                    {Trans("DEFAULT_LANG", language)}
                                 </Label>
                                 <select
-                                    id="paytm_status"
-                                    {...register("paytm_status", {
-                                        required: "Paytm mode is required",
+                                    id="default_language"
+                                    {...register("default_language", {
+                                        required: "Language is required",
                                     })}
                                 >
-                                    <option value="on">On</option>
-                                    <option value="off">Off</option>
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
                                 </select>
                             </FormGroup>
                         </Col>
-                        <Col lg={3}>
+                        <Col lg={4}>
                             <FormGroup mb="20px">
                                 <Label
                                     display="block"
                                     mb="5px"
-                                    htmlFor="paytm_mode"
+                                    htmlFor="currency"
                                 >
-                                    {Trans("PAYTM_MODE", language)}
+                                    {Trans("CURRENCY", language)}
                                 </Label>
                                 <select
-                                    id="paytm_mode"
-                                    {...register("paytm_mode", {
-                                        required: "Paytm mode is required",
+                                    id="currency"
+                                    {...register("currency", {
+                                        required: "Currency is required",
                                     })}
                                 >
-                                    <option value="sandbox">Sandbox</option>
-                                    <option value="live">Live</option>
+                                    <option value="USD">USD</option>
+                                    <option value="INR">INR</option>
                                 </select>
-                            </FormGroup>
-                        </Col>
-                        <Col lg={3}>
-                            <FormGroup mb="20px">
-                                <Label
-                                    display="block"
-                                    mb="5px"
-                                    htmlFor="paytm_key"
-                                >
-                                    {Trans("PAYTM_KEY", language)}
-                                </Label>
-                                <Input
-                                    id="paytm_key"
-                                    type="text"
-                                    placeholder="Enter paytm merchant"
-                                    feedbackText={errors?.name?.message}
-                                    state={
-                                        hasKey(errors, "name")
-                                            ? "error"
-                                            : "success"
-                                    }
-                                    showState={!!hasKey(errors, "name")}
-                                    {...register("paytm_merchant_key", {
-                                        required: "Paytm merchant is required",
-                                    })}
-                                />
-                            </FormGroup>
-                        </Col>
-                        <Col lg={3}>
-                            <FormGroup mb="20px">
-                                <Label
-                                    display="block"
-                                    mb="5px"
-                                    htmlFor="paytm_secret"
-                                >
-                                    {Trans("PAYTM_SECRET", language)}
-                                </Label>
-                                <Input
-                                    id="paytm_key"
-                                    type="text"
-                                    placeholder="Enter paytm secret"
-                                    feedbackText={errors?.name?.message}
-                                    state={
-                                        hasKey(errors, "name")
-                                            ? "error"
-                                            : "success"
-                                    }
-                                    showState={!!hasKey(errors, "name")}
-                                    {...register("paytm_secret_key", {
-                                        required: "Paytm secret is required",
-                                    })}
-                                />
                             </FormGroup>
                         </Col>
                     </Row>
@@ -237,9 +182,6 @@ const PaymentSetting: FC = () => {
                         <Col lg={4}>
                             <Button type="submit" color="brand2">
                                 {Trans("UPDATE", language)}
-                            </Button>
-                            <Button hasIcon size="md" color="brand2" disabled>
-                                <Spinner size="sm" /> Loading
                             </Button>
                         </Col>
                     </Row>
@@ -249,4 +191,4 @@ const PaymentSetting: FC = () => {
     );
 };
 
-export default PaymentSetting;
+export default GeneralSetting;

@@ -41,6 +41,10 @@ const loginSlice = createSlice({
             localStorage.setItem("permission", JSON.stringify(permission));
             localStorage.setItem("username", name);
         },
+        updateLangState(state, action: PayloadAction<any>) {
+            state.language = action.payload;
+            localStorage.setItem("language", action.payload);
+        },
         logoutState(state) {
             state.apiToken = "";
             state.name = "";
@@ -55,5 +59,9 @@ const loginSlice = createSlice({
     },
 });
 
-export const { updateLoginState, logoutState } = loginSlice.actions;
+export const {
+    updateLoginState,
+    logoutState,
+    updateLangState,
+} = loginSlice.actions;
 export default loginSlice.reducer;
