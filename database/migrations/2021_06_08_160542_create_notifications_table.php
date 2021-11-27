@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiKeys extends Migration
+class CreateNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateApiKeys extends Migration
      */
     public function up()
     {
-        Schema::create('api_keys', function (Blueprint $table) {
-
-            $table->increments('id');
-            $table->longText('secret_key');
-            $table->integer('user_id')->unsigned();
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
-
         });
     }
 
@@ -30,6 +30,6 @@ class CreateApiKeys extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_keys');
+        Schema::dropIfExists('notifications');
     }
 }

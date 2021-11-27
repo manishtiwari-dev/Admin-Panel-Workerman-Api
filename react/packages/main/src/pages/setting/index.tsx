@@ -6,8 +6,8 @@ import Content from "../../layouts/content";
 import SEO from "../../components/seo";
 import SideBarSetting from "./component/sidebarSetting";
 import GeneralSetting from "./component/GeneralSetting";
-import PaymentSetting from "./component/PaymentSetting";
-import WebsiteSetting from "./component/WebsiteSetting";
+import PaymentSetting from "./component/paymentSetting";
+import WebsiteSetting from "./component/websiteSetting";
 import PageHeader from "../../components/page-header";
 
 interface ParamVar {

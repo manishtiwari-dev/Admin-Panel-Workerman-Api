@@ -58,6 +58,14 @@ interface Pagi {
     total_page: number;
     currentPage: number;
 }
+interface FilterItem {
+    api_token: string;
+    page: number;
+    perPage: number;
+    search: string;
+    sortBy: string;
+    orderBY: string;
+}
 
 const Users: React.FC = () => {
     const { apiToken, language } = useAppSelector((state) => state.login);
@@ -73,17 +81,19 @@ const Users: React.FC = () => {
         formState: { errors },
         setValue,
     } = useForm();
-    const getUser = () => {
-        const formData = {
-            api_token: apiToken,
-            page: 1,
-            perPage: 10,
-            search: "",
-            sortBy: "id",
-            orderBY: "ASC",
-        };
+    const filterData = {
+        api_token: apiToken,
+        page: 1,
+        perPage: 10,
+        search: "",
+        sortBy: "id",
+        orderBY: "ASC",
+    };
+
+    const getUser = (filteData: FilterItem) => {
+        // console.log(filteData);
         axios
-            .post(userUrl, formData)
+            .post(userUrl, filteData)
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { status, data, message } = response.data;
@@ -155,7 +165,7 @@ const Users: React.FC = () => {
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { message } = response.data;
-                getUser();
+                // getUser();
                 alert(message);
             })
             .catch((error) => {
@@ -172,7 +182,7 @@ const Users: React.FC = () => {
                 console.log(response);
                 const { status, data, message } = response.data;
                 if (status) {
-                    getUser();
+                    getUser(filterData);
                     setMsgType("success");
                     setErrorMsg(message);
                 } else {
@@ -196,8 +206,21 @@ const Users: React.FC = () => {
             });
     };
 
+    const items = [];
+    for (let index = 1; index <= totalPage; index += 1) {
+        let activeItem = "";
+        if (index === currPage) activeItem = "active";
+        items.push(
+            <li key={index} className={`page-number ${activeItem}`}>
+                <a href="#!" onClick={getPage}>
+                    {index}
+                </a>
+            </li>
+        );
+    }
+    
     useEffect(() => {
-        getUser();
+        getUser(filterData);
     }, []);
 
     return (
@@ -310,14 +333,27 @@ const Users: React.FC = () => {
                                 <Pagination
                                     totalPage={Pagi}
                                     currPage={currPage}
-                                    getUser={() => getUser()}
+                                    getUser={() => getUser(filterData)}
                                 />
+                                <div className="pagination">
+                                    <ul className="pagination-2">
+                                        <li className="page-number prev">
+                                            <a href="#!">&laquo;</a>
+                                        </li>
+                                        {items}
+                                        <li className="page-number prev">
+                                            <a href="#!">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </Row>
                         </CheckPermission>
                     </Col>
                     <CheckPermission IsPageAccess="user.create">
                         <Col lg={4} className="userCreateForm hide">
-                            <CreateUserForm getUser={() => getUser()} />
+                            <CreateUserForm
+                                getUser={() => getUser(filterData)}
+                            />
                         </Col>
                     </CheckPermission>
                     <CheckPermission IsPageAccess="user.edit">
