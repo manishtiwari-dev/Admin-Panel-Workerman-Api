@@ -32,6 +32,7 @@ import RoleOption from "../../components/user/RoleOption";
 import CheckPermission from "../../helper";
 import { Trans } from "../../lang";
 import Pagination from "../component/pagination/index";
+import "../component/pagination/style.css";
 
 interface Info {
     id: number;
@@ -81,19 +82,18 @@ const Users: React.FC = () => {
         formState: { errors },
         setValue,
     } = useForm();
-    const filterData = {
-        api_token: apiToken,
-        page: 1,
-        perPage: 10,
-        search: "",
-        sortBy: "id",
-        orderBY: "ASC",
-    };
-
-    const getUser = (filteData: FilterItem) => {
+    const getUser = (pagev: number) => {
         // console.log(filteData);
+        const filterData = {
+            api_token: apiToken,
+            page: pagev,
+            perPage: 10,
+            search: "",
+            sortBy: "id",
+            orderBY: "ASC",
+        };
         axios
-            .post(userUrl, filteData)
+            .post(userUrl, filterData)
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { status, data, message } = response.data;
@@ -165,7 +165,7 @@ const Users: React.FC = () => {
             .then((response: AxiosResponse) => {
                 console.log(response);
                 const { message } = response.data;
-                // getUser();
+                getUser(1);
                 alert(message);
             })
             .catch((error) => {
@@ -182,7 +182,7 @@ const Users: React.FC = () => {
                 console.log(response);
                 const { status, data, message } = response.data;
                 if (status) {
-                    getUser(filterData);
+                    getUser(1);
                     setMsgType("success");
                     setErrorMsg(message);
                 } else {
@@ -207,20 +207,20 @@ const Users: React.FC = () => {
     };
 
     const items = [];
-    for (let index = 1; index <= totalPage; index += 1) {
+    for (let index = 1; index <= Pagi; index += 1) {
         let activeItem = "";
         if (index === currPage) activeItem = "active";
         items.push(
             <li key={index} className={`page-number ${activeItem}`}>
-                <a href="#!" onClick={getPage}>
+                <a href="#!" onClick={() => getUser(index)}>
                     {index}
                 </a>
             </li>
         );
     }
-    
+
     useEffect(() => {
-        getUser(filterData);
+        getUser(1);
     }, []);
 
     return (
@@ -330,19 +330,24 @@ const Users: React.FC = () => {
                                             ))}
                                     </tbody>
                                 </Table>
-                                <Pagination
-                                    totalPage={Pagi}
-                                    currPage={currPage}
-                                    getUser={() => getUser(filterData)}
-                                />
                                 <div className="pagination">
                                     <ul className="pagination-2">
                                         <li className="page-number prev">
-                                            <a href="#!">&laquo;</a>
+                                            <a
+                                                href="#!"
+                                                onClick={() => getUser(1)}
+                                            >
+                                                &laquo;
+                                            </a>
                                         </li>
                                         {items}
                                         <li className="page-number prev">
-                                            <a href="#!">&raquo;</a>
+                                            <a
+                                                href="#!"
+                                                onClick={() => getUser(Pagi)}
+                                            >
+                                                &raquo;
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -351,9 +356,7 @@ const Users: React.FC = () => {
                     </Col>
                     <CheckPermission IsPageAccess="user.create">
                         <Col lg={4} className="userCreateForm hide">
-                            <CreateUserForm
-                                getUser={() => getUser(filterData)}
-                            />
+                            <CreateUserForm getUser={() => getUser(1)} />
                         </Col>
                     </CheckPermission>
                     <CheckPermission IsPageAccess="user.edit">
